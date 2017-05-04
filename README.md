@@ -18,7 +18,7 @@ IDE | PyCharm 2017.1 x64
  
  
 ## 运行效果
- 由于展示需要爬取大量数据，目前暂时没有条件，为方便大家查看贴上本地运行效果图片：
+ 由于展示需要爬取大量数据，为方便大家查看贴上本地运行效果图片：
  
  
 ![Alt text](https://github.com/yipwinghong/Anime/blob/master/Screenshots/1.png)

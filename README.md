@@ -22,6 +22,7 @@ IDE | PyCharm 2017.1 x64
 
  2、运行爬虫文件爬取数据。
  
+ 
  3、项目目录下运行：<pre><code>python manage.py runserver</code></pre>
 
  4、浏览器下访问：<pre><code>127.0.0.1:8000</code></pre>

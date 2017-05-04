@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block custom-css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/card.css' %}">
+{% endblock %}
+
+{% block left-menu %}
+{% endblock %}
+
+{% block right-content %}
+    <div class="row">
+        <div class="column">
+            <div class="ui container segment">
+                <div class="ui divided items">
+                    <div class="item">
+                        <div class="content">
+                            <a class="header">{{ Bangumi.title }}</a>
+                            <div class="ui segment" style="margin:5px 0 5px 0;width:80%">
+                                <img class="ui small left floated image"
+                                     src="{{ MEDIA_URL }}{{ Bangumi.bangumi_id }}.jpg">
+                                <p><b>总播放</b>：{{ Bangumi.play_count }}</p>
+                                <p><b>追番人数</b>：{{ Bangumi.favorites }}</p>
+                                <p><b>弹幕总数</b>：{{ Bangumi.danmaku_count }}</p>
+                                <p><b>声优 - 角色</b>：</p>
+                                {% for actor in Bangumi.actor %}
+                                    {{ actor.0 }}&nbsp;->&nbsp;{{ actor.1 }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    {% if forloop.counter|divisibleby:3 %}<br>{% endif %}
+                                {% endfor %}
+                                <br><br>
+                                <p><b>简介</b>：</p>
+                                {{ Bangumi.evaluates }}
+                                <br>
+                            </div>
+                            <br>
+                            <div class="ui" style="margin:10px;width:100%">
+                                <div class="ui relaxed list">
+                                    {% for episode in Episodes %}
+                                        <div class="item"  style="float: left; width: 200px; height: 130px; margin: 5px">
+                                            <div class="content">
+                                                <a class="header" href="{{ episode.webplay_url }}">第{{ episode.index }}话</a>
+                                                <div class="description">
+                                                    <a style="color:darkgrey" href="{{ episode.webplay_url }}">{{ episode.index_title }}<br><br><img class="ui avatar small" style="width: 100px" src="{{ MEDIA_URL }}{{ episode.episode_id }}_.jpg"></a></div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="ui equal width grid" style="margin:5px 0 5px 0; width:70%; clear: both">
+                                <div class="row">
+                                    <div class="column">
+                                        <div class="ui container segment">
+                                            <div class="ui compact menu">
+                                                <div class="ui simple dropdown item">
+                                                    Area
+                                                    <i class="dropdown icon"></i>
+                                                    <div class="menu">
+                                                        <div class="item" id="coin_count">投币数</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ui container" id="chart1"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom-js %}
+    <script>
+        $('#coin_count').on('click', function () {
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "{% url 'bangumi:coin_count'  %}",
+                data: {
+                    'bangumi_id': {{ Bangumi.bangumi_id }}
+                },
+                async: true,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    $('#chart1').highcharts({
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: '投币数'
+                        },
+                        xAxis: {
+                            type: 'category'
+                        },
+                        yAxis: {
+                            title: {
+                                text: '数量'
+                            }
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: 'coins',
+                            data: data
+                        }]
+                    });
+                }
+            })
+        });
+    </script>
+
+{% endblock %}

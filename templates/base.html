@@ -1,0 +1,99 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        Bangumi
+    </title>
+    <link rel="stylesheet" href="{% static 'css/semantic.css' %}">
+    <link href="{% static 'css/index.css' %}" rel="stylesheet" type="text/css"/>
+
+    {% block custom-css %}{% endblock %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/semantic.js' %}"></script>
+    <script src="{% static 'js/highcharts.js' %}"></script>
+    <script src="{% static 'js/highcharts-more.js' %}"></script>
+    <script src="{% static 'js/exporting.js' %}"></script>
+</head>
+
+<body>
+{% block left-menu %}
+
+{% endblock %}
+<div class="ui thin visible left sidebar inverted vertical menu ui loader">
+    <div class="header item">
+        <img src="{% static 'images/logo2.jpg' %}">
+    </div>
+
+    <div class="item">
+        Doucument
+        <i class="browser icon"></i>
+    </div>
+    <a href="">
+        <div class="item">
+            Charts
+            <i class="bar chart icon"></i>
+        </div>
+    </a>
+    <div class="item">
+        Others
+        <i class="idea icon"></i>
+    </div>
+</div>
+
+<div class="pusher">
+    <!-- 右顶菜单 -->
+    <div class="ui pointing menu">
+        <div class="header item" id="menu">Menu<i class="content icon"></i></div>
+        <a href="{% url 'index' %}">
+            <div class="item {% if request.path == 'index' %}active{% endif %}">Index</div>
+        </a>
+        <a href="{% url 'bangumi:bangumi_list' %}">
+            <div class="item {% if request.path|slice:'13' == '/bangumi/list' %}active{% endif %}">Bangumi List</div>
+        </a>
+        <a>
+            <div class="item {% if request.path|slice:'15' == '/bangumi/detail' %}active{% endif %}">Data</div>
+        </a>
+        <a>
+            <div class="item {% if request.path|slice:'8' == '/aboutus' %}active{% endif %}">About us</div>
+        </a>
+        <div class="right menu" style="margin-right: 200px">
+            <div class="item">
+                <div class="ui transparent icon input">
+                    <input type="text" id='keywords' placeholder="Search bangumi...">
+                    <i id='searchBtn' class="search link icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block right-content %}
+
+    {% endblock %}
+</div>
+
+{% block custom-js %}
+{% endblock %}
+<script>
+
+    // 左侧菜单
+    $('#menu').click(function () {
+        $('.ui.sidebar').sidebar('toggle');
+    });
+
+    // 搜索按钮
+    $('#searchBtn').on('click', function () {
+        keywords = $('#keywords').val(),
+            window.location.href = "{% url 'bangumi:bangumi_list' %}?keywords=" + keywords
+    });
+
+    // 回车键响应搜索
+    $('#keywords').keydown(function (e) {
+        if (e.keyCode == 13) {  //模拟点击搜索按钮，触发上面的 Click 事件
+            $('#searchBtn').click();
+        }
+    });
+</script>
+</body>
+</html>

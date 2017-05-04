@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block custom-css %}{% endblock %}
+
+{% block left-menu %}
+{% endblock %}
+
+{% block right-content %}
+    <!-- 右栏目 -->
+
+    <div class="ui equal width grid" style="margin:5px 0 5px 0;width:70%">
+        <div class="row">
+            <div class="column">
+                <div class="ui red segment">
+                    <div class="ui statistic">
+                        <div class="value">
+                            {{ bangumi_number }}
+                        </div>
+                        <div class="label">
+                            部番剧
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui blue segment">
+                    <div class="ui statistic">
+                        <div class="value">
+                            {{ episodes_number }}
+                        </div>
+                        <div class="label">
+                            话数据
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- 分割线 -->
+    <div class="ui divider"></div>
+    <!-- 图表 -->
+    <div class="ui equal width grid" style="margin:5px 0;width:70%">
+        <div class="row">
+            <div class="column">
+                <div class="row">
+                    <div class="column" style="width:49%; float:left; margin:3px">
+                        <div class="ui container segment">
+                            <div class="ui container" id="chart1"></div>
+                        </div>
+                    </div>
+                    <div class="column" style="width:49%; float:left; margin:3px">
+                        <div class="ui container segment">
+                            <div class="ui container" id="chart2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui equal width grid" style="margin:5px 0 5px 0;width:70%" id="chart34">
+        <div class="row">
+            <div class="column">
+                <div class="ui container segment">
+                    <div class="ui compact menu" style="margin: 5px">
+                        <div class="ui simple dropdown item">
+                            Charts
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item" id="coins">热度趋势</div>
+                                <div class="item" id="wordcloud">生成词云</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui container" id="chart3"></div>
+                    <div class="ui container" id="chart4" style="display: none">
+                        <img src="{% static 'images/cloud.jpg' %}" style="width: 800px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui divider"></div>
+{% endblock %}
+
+{% block custom-js %}
+    <script>
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: "{% url 'chart_data' %}",
+            data: {"key": "get_favorite_count"},
+            async: true,
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function (data) {
+                $('#chart1').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: '追番人数top10'
+                    },
+                    xAxis: {
+                        type: 'category'
+                    },
+                    yAxis: {
+                        title: {
+                            text: '数量'
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: 'favorites',
+                        colorByPoint: true,
+                        data: data
+                    }],
+                });
+            }
+        })
+        $.ajax({
+            cache: false,
+            type: "GET",
+            url: "{% url 'chart_data' %}",
+            data: {"key": "get_tags_count"},
+            async: true,
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function (data) {
+                $('#chart2').highcharts({
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: '热门类型top10'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true
+                            },
+                            showInLegend: true
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: 'Percent',
+                        colorByPoint: true,
+                        data: data
+                    }],
+                });
+            }
+        })
+        $('#coins').on('click', function () {
+            $('#chart4').css('display', 'none');
+            $('#chart3').css('display', 'block');
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "{% url 'chart_data' %}",
+                data: {"key": "get_episode_coins"},
+                async: true,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    $('#chart3').highcharts({
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: '热度趋势top5'
+                        },
+                        xAxis: {
+                            type: 'category'
+                        },
+                        yAxis: {
+                            title: {
+                                text: '数量'
+                            }
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'middle',
+                            borderWidth: 0
+                        },
+                        series: data
+                    });
+                }
+            })
+        });
+        $('#wordcloud').on('click', function () {
+            $('#chart4').css('display', 'block');
+            $('#chart3').css('display', 'none');
+        });
+    </script>
+
+{% endblock %}

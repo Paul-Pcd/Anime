@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block custom-css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/card.css' %}">
+{% endblock %}
+
+{% block left-menu %}
+{% endblock %}
+
+{% block right-content %}
+    <div class="row">
+        <div class="column">
+            <div class="ui container segment">
+                <div class="ui divided items">
+                    <div class="item">
+                        <div class="content">
+                            <a class="header">
+                                Title
+                            </a>
+                            <div class="description">
+                                {% for bangumi in Bangumis.object_list %}
+                                    <div class="ui card" style="margin: 10px; width: 195px; height: 450px; float: left">
+                                        <div class="image">
+                                            <img src="{{ MEDIA_URL }}{{ bangumi.bangumi_id }}.jpg">
+                                        </div>
+                                        <div class="content">
+                                            <a class="header"
+                                               href="{% url 'bangumi:bangumi_detail' bangumi.bangumi_id %}">{{ bangumi.title }}</a>
+                                            <div class="meta">
+                                                <span class="date">{{ bangumi.year }}.{{ bangumi.month }}</span>
+                                            </div>
+                                            <div class="description">
+                                                {% for tag in bangumi.tags %}
+                                                    {{ tag }}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="extra content" style="margin: 2px">
+                                            <i class="user icon"></i> {{ bangumi.favorites }} Favorites
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if Bangumis.has_previous %}
+                    <a href="?{{ Bangumis.previous_page_numuber.querystring }}">
+                        <div class="tiny ui animated button" tabindex="0">
+                            <div class="visible content">Prev</div>
+                            <div class="hidden content">
+                                <i class="left arrow icon"></i>
+                            </div>
+                        </div>
+                    </a>
+                {% endif %}
+                {% for page in Bangumis.pages %}
+                    {% if page %}
+                        {% ifequal page Bangumis.number %}
+                            <a href="?{{ page.querystring }}">
+                                <button class="tiny ui button">{{ page }}</button>
+                            </a>
+                        {% else %}
+                            <a href="?{{ page.querystring }}" class="page">
+                                <button class="tiny  ui button">{{ page }}</button>
+                            </a>
+                        {% endifequal %}
+                    {% else %}
+                        <button class="tiny  ui button">......</button>
+                    {% endif %}
+                {% endfor %}
+                {% if Bangumis.has_next %}
+                    <a href="?{{ Bangumis.next_page_number.querystring }}">
+                        <div class="tiny ui animated button" tabindex="0">
+                            <div class="visible content">Next</div>
+                            <div class="hidden content">
+                                <i class="right arrow icon"></i>
+                            </div>
+                        </div>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -17,6 +17,7 @@ IDE | PyCharm 2017.1 x64
 爬虫文件见tools（channel_extracing.py、page_parsing、clean_data.py、download.py）。
  
  
+ 
 ## 运行效果
  由于展示需要爬取大量数据，为方便大家查看贴上本地运行效果图片：
  

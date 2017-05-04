@@ -9,13 +9,22 @@
 ---|---
 操作系统 | Windows 10 Enterprise (x64)
 数据库 | MongoDB 3.4.4
-开发语言 | Python 2.7.4
+开发语言 | Python 3.5.3
 后端框架 | Django 1.11
 前端框架 | Semantic UI 2.2.10
 IDE | PyCharm 2017.1 x64
 
 爬虫文件见tools（channel_extracing.py、page_parsing、clean_data.py、download.py）。
  
+
+## 使用方法
+ 1、安装MongoDB数据库。
+
+ 2、运行爬虫文件爬取数据。
+ 
+ 3、项目目录下运行：<pre><code>python manage.py runserver</code></pre>
+
+ 4、浏览器下访问：<pre><code>127.0.0.1:8000</code></pre>
  
  
 ## 运行效果

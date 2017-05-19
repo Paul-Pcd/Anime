@@ -18,14 +18,15 @@ IDE | PyCharm 2017.1 x64
  
 
 ## 使用方法
- 1、安装MongoDB数据库。
+1、安装MongoDB数据库。
 
- 2、运行爬虫文件爬取数据。
- 
- 
- 3、项目目录下运行：<pre><code>python manage.py runserver</code></pre>
+2、安装环境依赖包（不同版本操作系统安装方法有差异，见网上具体解决方案）：<pre><code>pip install -r requirements.txt</code></pre>
 
- 4、浏览器下访问：<pre><code>127.0.0.1:8000</code></pre>
+3、运行爬虫程序(tools目录)爬取数据。
+
+4、项目目录下运行：<pre><code>python manage.py runserver</code></pre>      
+
+5、浏览器下访问：<pre><code>127.0.0.1:8000</code></pre>
  
  
 ## 运行效果
